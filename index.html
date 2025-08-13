@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal AI Agent Cost Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Calculator Section - Main Focus */
+        .calculator-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        .header {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #4ade80 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        .input-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+        .results-section {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ff6b35;
+            padding-bottom: 8px;
+        }
+        .results-section .section-title {
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .cost-breakdown {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .cost-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        .final-price {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .final-price h3 {
+            margin-bottom: 10px;
+        }
+        .final-price .price {
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+        .info-box {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .info-box h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        .info-box ul {
+            color: #424242;
+            margin-left: 20px;
+        }
+        .info-box li {
+            margin-bottom: 5px;
+        }
+        .reference-links {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 3px solid #ff6b35;
+        }
+        .reference-links h4 {
+            color: white;
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+        .reference-links a {
+            color: #87ceeb;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 8px;
+            padding: 4px 0;
+        }
+        .reference-links a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        .provider-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .provider-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #00a67e;
+        }
+        .calculation-step {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            background: #e9ecef;
+            border-radius: 8px;
+            padding: 4px;
+        }
+        .tab-button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .tab-button.active {
+            background: #ff6b35;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Information Sections */
+        .info-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        /* AI Agent Flow */
+        .agent-flow {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 30px;
+        }
+        .flow-step {
+            background: #c8e6c9;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 4px solid #4caf50;
+            display: flex;
+            align-items: center;
+        }
+        .flow-step .step-number {
+            background: #4caf50;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        /* Comparison Section */
+        .comparison-section {
+            background: #f8f9fa;
+            border: 2px solid #6c757d;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 30px;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .comparison-card {
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+        .openai-comparison { background: #e3f2fd; border-left-color: #2196f3; }
+        .vectordb-comparison { background: #f3e5f5; border-left-color: #9c27b0; }
+        .embedding-comparison { background: #fef3c7; border-left-color: #f59e0b; }
+        
+        /* Optimization Section */
+        .optimization-section {
+            background: #e8f5e8;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 30px;
+        }
+        .optimization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .optimization-card {
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        .high-impact { background: rgba(76, 175, 80, 0.1); }
+        .technical { background: rgba(255, 193, 7, 0.1); border-left-color: #ffc107; }
+        .cost-effective { background: rgba(33, 150, 243, 0.1); border-left-color: #2196f3; }
+        
+        /* Recommended Config */
+        .recommended-config {
+            background: #c8e6c9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .config-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        
+        /* Implementation Section */
+        .implementation-section {
+            background: #f3e5f5;
+            border: 2px solid #9c27b0;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Main Calculator Section -->
+        <div class="calculator-container">
+            <div class="header">
+                <h1>AI Agent Cost Calculator</h1>
+                <p>Calculate costs for OpenAI, Anthropic, Google, Vector DBs, and Embeddings</p>
+            </div>
+
+            <div class="content">
+                <div class="input-section">
+                    <h2 class="section-title">Configuration</h2>
+                    
+                    <div class="tab-buttons">
+                        <button class="tab-button active" id="basic-btn">Basic Setup</button>
+                        <button class="tab-button" id="advanced-btn">Advanced</button>
+                    </div>
+
+                    <div id="basic-tab" class="tab-content active">
+                        <div class="input-group">
+                            <label for="monthlyQueries">Monthly Queries</label>
+                            <input type="number" id="monthlyQueries" value="10000" min="0">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="llmProvider">LLM Provider</label>
+                            <select id="llmProvider">
+                                <option value="openai">OpenAI (GPT Models)</option>
+                                <option value="anthropic">Anthropic (Claude Models)</option>
+                                <option value="google">Google (Gemini Models)</option>
+                                <option value="groq">Groq (Ultra Fast Inference)</option>
+                                <option value="together">Together AI (Open Models)</option>
+                                <option value="deepseek">DeepSeek (Cost-Effective)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="llmModel">LLM Model</label>
+                            <select id="llmModel">
+                                <option value="gpt4omini">GPT-4o Mini</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="vectorDB">Vector Database</label>
+                            <select id="vectorDB">
+                                <option value="pinecone">Pinecone (Managed, Production-Ready)</option>
+                                <option value="weaviate">Weaviate Cloud (Open Source + Cloud)</option>
+                                <option value="qdrant">Qdrant Cloud (High Performance)</option>
+                                <option value="chroma">ChromaDB (Simple & Fast)</option>
+                                <option value="milvus">Milvus (Enterprise Scale)</option>
+                                <option value="supabase">Supabase Vector (PostgreSQL)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="embeddingProvider">Embedding Provider</label>
+                            <select id="embeddingProvider">
+                                <option value="openai3small">OpenAI text-embedding-3-small</option>
+                                <option value="openai3large">OpenAI text-embedding-3-large</option>
+                                <option value="googleembedding">Google Gemini Embedding</option>
+                                <option value="openaiada002">OpenAI text-embedding-ada-002</option>
+                                <option value="voyagelarge">Voyage AI Large</option>
+                                <option value="coherev3">Cohere Embed v3</option>
+                                <option value="sentencetransformers">Sentence Transformers (Self-Hosted)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="documentsCount">Documents Count</label>
+                            <input type="number" id="documentsCount" value="25000" min="0">
+                        </div>
+                    </div>
+
+                    <div id="advanced-tab" class="tab-content">
+                        <div class="input-group">
+                            <label for="avgInputTokens">Input Tokens per Query</label>
+                            <input type="number" id="avgInputTokens" value="1500" min="100">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="avgOutputTokens">Output Tokens per Query</label>
+                            <input type="number" id="avgOutputTokens" value="500" min="50">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="documentsPerQuery">Documents Retrieved per Query</label>
+                            <input type="number" id="documentsPerQuery" value="5" min="1" max="20">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="avgDocSize">Average Document Size (tokens)</label>
+                            <input type="number" id="avgDocSize" value="1000" min="100">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="monthlyUpdates">Monthly Document Updates</label>
+                            <input type="number" id="monthlyUpdates" value="5000" min="0">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="deploymentOption">Deployment</label>
+                            <select id="deploymentOption">
+                                <option value="serverless">Serverless Functions</option>
+                                <option value="cloud">Cloud Hosting (AWS/GCP/Azure)</option>
+                                <option value="selfhosted">Self-Hosted</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>🎯 Why This Universal Approach is Superior:</h4>
+                        <ul>
+                            <li><strong>Provider Freedom</strong> - No vendor lock-in, switch providers anytime</li>
+                            <li><strong>Cost Optimization</strong> - Choose the most cost-effective models for each use case</li>
+                            <li><strong>Performance Tuning</strong> - Mix and match for optimal speed/quality/cost balance</li>
+                            <li><strong>Latest Models</strong> - Access cutting-edge models from multiple providers</li>
+                            <li><strong>Scalable Architecture</strong> - Proven vector DB + embedding + LLM stack</li>
+                            <li><strong>Enterprise Ready</strong> - Production-grade components with SLA guarantees</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <h2 class="section-title">Cost Analysis</h2>
+                    
+                    <div class="reference-links">
+                        <h4>🔗 Official Pricing References:</h4>
+                        <a href="https://openai.com/api/pricing/" target="_blank">🤖 OpenAI API Pricing</a>
+                        <a href="https://www.anthropic.com/pricing" target="_blank">🧠 Anthropic Claude Pricing</a>
+                        <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank">🔵 Google Gemini API Pricing</a>
+                        <a href="https://www.pinecone.io/pricing/" target="_blank">📊 Pinecone Vector DB Pricing</a>
+                        <a href="https://weaviate.io/pricing" target="_blank">🔍 Weaviate Cloud Pricing</a>
+                    </div>
+
+                    <div class="provider-grid">
+                        <div class="provider-card">
+                            <h4>🤖 Main LLM Processing:</h4>
+                            <div class="calculation-step">
+                                <span>Provider:</span>
+                                <span id="llmProviderName">OpenAI</span>
+                            </div>
+                            <div class="calculation-step">
+                                <span>Model:</span>
+                                <span id="llmModelName">GPT-4o Mini</span>
+                            </div>
+                            <div class="calculation-step">
+                                <span>Monthly Cost:</span>
+                                <span id="llmCostDisplay">$7.50</span>
+                            </div>
+                        </div>
+
+                        <div class="provider-card">
+                            <h4>🔢 Embedding Processing:</h4>
+                            <div class="calculation-step">
+                                <span>Provider:</span>
+                                <span id="embeddingProviderName">OpenAI</span>
+                            </div>
+                            <div class="calculation-step">
+                                <span>Model:</span>
+                                <span id="embeddingModelName">Small</span>
+                            </div>
+                            <div class="calculation-step">
+                                <span>Monthly Cost:</span>
+                                <span id="embeddingCostDisplay">$0.20</span>
+                            </div>
+                        </div>
+
+                        <div class="provider-card">
+                            <h4>📊 Vector Database:</h4>
+                            <div class="calculation-step">
+                                <span>Provider:</span>
+                                <span id="vectorDBName">Pinecone</span>
+                            </div>
+                            <div class="calculation-step">
+                                <span>Storage:</span>
+                                <span id="vectorStorageDisplay">25K docs</span>
+                            </div>
+                            <div class="calculation-step">
+                                <span>Monthly Cost:</span>
+                                <span id="vectorDBCostDisplay">$50.00</span>
+                            </div>
+                        </div>
+
+                        <div class="provider-card">
+                            <h4>☁️ Infrastructure:</h4>
+                            <div class="calculation-step">
+                                <span>Deployment:</span>
+                                <span id="deploymentTypeDisplay">Serverless</span>
+                            </div>
+                            <div class="calculation-step">
+                                <span>Monthly Cost:</span>
+                                <span id="infrastructureCostDisplay">$15.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cost-breakdown">
+                        <div class="cost-row">
+                            <span>LLM Processing:</span>
+                            <span id="llmCost">$7.50</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Embeddings:</span>
+                            <span id="embeddingCost">$0.20</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Vector Database:</span>
+                            <span id="vectorDBCost">$50.00</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Infrastructure:</span>
+                            <span id="infrastructureCost">$15.00</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Total Monthly Cost:</span>
+                            <span id="totalCost">$72.70</span>
+                        </div>
+                    </div>
+
+                    <div class="final-price">
+                        <h3>Total Cost</h3>
+                        <div class="price" id="finalPrice">$72.70/month</div>
+                        <p>Multi-Provider Stack: LLM + Vector DB + Embeddings + Hosting</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supporting Information Sections -->
+        <div class="info-container">
+            <!-- AI Agent Flow -->
+            <div class="agent-flow">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">🔄 Universal AI Agent Processing Flow</h3>
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div><strong>User Query:</strong> "What's your refund policy for damaged items?" → Agent receives natural language input</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div><strong>Query Embedding:</strong> Convert query to vector using embedding model (OpenAI/Google/Voyage/Cohere)</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div><strong>Vector Search:</strong> Find most relevant documents in vector database (Pinecone/Weaviate/Qdrant)</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div><strong>Context Assembly:</strong> Combine user query + retrieved documents into structured prompt</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div><strong>LLM Processing:</strong> Generate response using chosen model (GPT-4o/Claude/Gemini/Groq)</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">6</div>
+                    <div><strong>Response Delivery:</strong> "For damaged items, we offer full refunds within 30 days with photo evidence..."</div>
+                </div>
+                <p style="color: #2e7d32; margin-top: 15px; font-size: 0.9rem;">
+                    <strong>💡 Universal Advantage:</strong> Choose the best provider for each component. Switch providers without rebuilding your architecture. Optimize for cost, performance, or quality independently.
+                </p>
+            </div>
+
+            <!-- Provider Comparison -->
+            <div class="comparison-section">
+                <h3 style="color: #495057; margin-bottom: 20px;">📊 Provider Comparison & Recommendations</h3>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-card openai-comparison">
+                        <h4 style="color: #1565c0; margin-bottom: 10px;">🤖 LLM Providers</h4>
+                        <div style="margin-bottom: 10px;">
+                            <strong style="color: #00a67e;">OpenAI:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                                <li>GPT-4o: $2.50/$10.00 per 1M tokens - Best overall quality</li>
+                                <li>GPT-4o Mini: $0.15/$0.60 - Best cost/performance</li>
+                                <li>Excellent for complex reasoning & coding</li>
+                            </ul>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <strong style="color: #d97706;">Anthropic:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                                <li>Claude Sonnet 4: $3.00/$15.00 per 1M tokens</li>
+                                <li>Claude 3 Haiku: $0.25/$1.25 - Ultra fast</li>
+                                <li>Best for analysis & creative writing</li>
+                            </ul>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <strong style="color: #4285f4;">Google:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                                <li>Gemini 2.5 Pro: $1.25/$10.00 per 1M tokens</li>
+                                <li>Gemini 2.5 Flash: $0.30/$2.50 - Great speed/cost balance</li>
+                                <li>Gemini 2.5 Flash-Lite: $0.10/$0.40 - Most cost-effective</li>
+                                <li>Best for multimodal tasks & long context</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong style="color: #7c3aed;">Groq:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                                <li>Llama 3.1 70B: $0.59/$0.79 per 1M tokens</li>
+                                <li>500+ tokens/second speed</li>
+                                <li>Best for real-time applications</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="comparison-card vectordb-comparison">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">📊 Vector Database</h4>
+                        <div style="margin-bottom: 10px;">
+                            <strong style="color: #7c3aed;">Pinecone:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                                <li>Standard: $50/month minimum</li>
+                                <li>Fully managed, production-ready</li>
+                                <li>Best for enterprises & startups</li>
+                            </ul>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <strong style="color: #059669;">Weaviate:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                                <li>Sandbox: Free (1M vectors)</li>
+                                <li>Best for developers & prototypes</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong style="color: #dc2626;">Qdrant:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                                <li>Free tier: 1GB storage</li>
+                                <li>High performance & accuracy</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="comparison-card embedding-comparison">
+                        <h4 style="color: #92400e; margin-bottom: 10px;">🔢 Embedding Models</h4>
+                        <div style="margin-bottom: 10px;">
+                            <strong style="color: #00a67e;">OpenAI:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                                <li>text-embedding-3-large: $0.13/1M tokens</li>
+                                <li>text-embedding-3-small: $0.02/1M tokens</li>
+                                <li>High quality, easy integration</li>
+                            </ul>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <strong style="color: #4285f4;">Google:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                                <li>Gemini Embedding: $0.15/1M tokens</li>
+                                <li>Stable and high rate limits</li>
+                                <li>Optimized for Gemini models</li>
+                            </ul>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <strong style="color: #7c2d12;">Voyage AI:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                                <li>voyage-large-2: $0.12/1M tokens</li>
+                                <li>Optimized for retrieval tasks</li>
+                                <li>Better than OpenAI for search</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong style="color: #1f2937;">Self-Hosted:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                                <li>Sentence Transformers: FREE</li>
+                                <li>BGE models: FREE</li>
+                                <li>Requires GPU infrastructure</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Optimization -->
+            <div class="optimization-section">
+                <h3 style="color: #2e7d32; margin-bottom: 20px;">💡 Cost Optimization Strategies</h3>
+                
+                <div class="optimization-grid">
+                    <div class="optimization-card high-impact">
+                        <h4 style="color: #2e7d32; margin-bottom: 10px;">🎯 High-Impact Optimizations</h4>
+                        <ul style="color: #1b5e20; margin-left: 15px; font-size: 0.9rem;">
+                            <li><strong>Smart Model Routing:</strong> Use GPT-4o Mini for simple queries, GPT-4o for complex ones</li>
+                            <li><strong>Embedding Caching:</strong> Cache embeddings to avoid re-processing same content</li>
+                            <li><strong>Context Compression:</strong> Use smaller, more relevant context chunks</li>
+                            <li><strong>Provider Switching:</strong> Move to cheaper providers for specific use cases</li>
+                            <li><strong>Batch Processing:</strong> Process multiple embeddings in batches</li>
+                            <li><strong>Free Tiers:</strong> Start with free tiers (Weaviate, Qdrant) for development</li>
+                        </ul>
+                    </div>
+
+                    <div class="optimization-card technical">
+                        <h4 style="color: #f57f17; margin-bottom: 10px;">⚙️ Technical Optimizations</h4>
+                        <ul style="color: #e65100; margin-left: 15px; font-size: 0.9rem;">
+                            <li><strong>Semantic Caching:</strong> Cache similar query results</li>
+                            <li><strong>Dynamic Context:</strong> Adjust context length based on query complexity</li>
+                            <li><strong>Streaming Responses:</strong> Reduce perceived latency</li>
+                            <li><strong>Vector DB Optimization:</strong> Use proper indexing and filtering</li>
+                            <li><strong>Load Balancing:</strong> Distribute across multiple providers</li>
+                            <li><strong>Usage Monitoring:</strong> Track costs per query type</li>
+                        </ul>
+                    </div>
+
+                    <div class="optimization-card cost-effective">
+                        <h4 style="color: #1565c0; margin-bottom: 10px;">📊 Cost-Effective Stacks</h4>
+                        <ul style="color: #0d47a1; margin-left: 15px; font-size: 0.9rem;">
+                            <li><strong>Budget Stack:</strong> Gemini 2.5 Flash-Lite + Weaviate + OpenAI Small = ~$25/month</li>
+                            <li><strong>Balanced Stack:</strong> Claude 3.5 Sonnet + Pinecone + Voyage = ~$150/month</li>
+                            <li><strong>Premium Stack:</strong> GPT-4o + Pinecone + OpenAI Large = ~$300/month</li>
+                            <li><strong>Google Stack:</strong> Gemini 2.5 Pro + Qdrant + Google Embedding = ~$180/month</li>
+                            <li><strong>Ultra-Fast Stack:</strong> Groq + Qdrant + Self-hosted = ~$100/month</li>
+                            <li><strong>Self-Hosted:</strong> Open models + ChromaDB + Local = ~$30/month</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="recommended-config">
+                    <h4 style="color: #1b5e20; margin-bottom: 15px; text-align: center;">🚀 Recommended Starting Configuration</h4>
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <strong style="color: #2e7d32;">LLM:</strong><br>
+                            <span style="color: #1b5e20;">GPT-4o Mini</span>
+                        </div>
+                        <div class="config-item">
+                            <strong style="color: #2e7d32;">Vector DB:</strong><br>
+                            <span style="color: #1b5e20;">Weaviate Free</span>
+                        </div>
+                        <div class="config-item">
+                            <strong style="color: #2e7d32;">Embeddings:</strong><br>
+                            <span style="color: #1b5e20;">OpenAI 3-small</span>
+                        </div>
+                        <div class="config-item">
+                            <strong style="color: #2e7d32;">Hosting:</strong><br>
+                            <span style="color: #1b5e20;">Serverless</span>
+                        </div>
+                        <div class="config-item">
+                            <strong style="color: #2e7d32;">Documents:</strong><br>
+                            <span style="color: #1b5e20;">25K docs</span>
+                        </div>
+                        <div class="config-item">
+                            <strong style="color: #2e7d32;">Monthly Cost:</strong><br>
+                            <span style="color: #1b5e20; font-size: 1.1rem; font-weight: bold;">~$35-50</span>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; color: #1b5e20; font-style: italic;">
+                        💡 Perfect for MVP and early-stage products. Scale up components as your usage grows.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Implementation Guide -->
+            <div class="implementation-section">
+                <h3 style="color: #7b1fa2; margin-bottom: 15px;">🛠️ Implementation Guide & Resources</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div style="background: rgba(156, 39, 176, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #9c27b0;">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">🚀 Deployment Options</h4>
+                        <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                            <li><a href="https://docs.aws.amazon.com/lambda/" target="_blank" style="color: #7b1fa2;">AWS Lambda + API Gateway</a></li>
+                            <li><a href="https://cloud.google.com/functions" target="_blank" style="color: #7b1fa2;">Google Cloud Functions</a></li>
+                            <li><a href="https://vercel.com/docs/functions" target="_blank" style="color: #7b1fa2;">Vercel Edge Functions</a></li>
+                            <li><a href="https://docs.docker.com/" target="_blank" style="color: #7b1fa2;">Docker Containers</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: rgba(76, 175, 80, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #4caf50;">
+                        <h4 style="color: #2e7d32; margin-bottom: 10px;">📚 Framework Integration</h4>
+                        <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem;">
+                            <li><a href="https://python.langchain.com/" target="_blank" style="color: #2e7d32;">LangChain Framework</a></li>
+                            <li><a href="https://docs.llamaindex.ai/" target="_blank" style="color: #2e7d32;">LlamaIndex</a></li>
+                            <li><a href="https://docs.haystack.deepset.ai/" target="_blank" style="color: #2e7d32;">Haystack by deepset</a></li>
+                            <li><a href="https://github.com/microsoft/semantic-kernel" target="_blank" style="color: #2e7d32;">Microsoft Semantic Kernel</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="background: #e3f2fd; border: 2px solid #2196f3; border-radius: 8px; padding: 15px;">
+                    <h4 style="color: #1565c0; margin-bottom: 10px;">🔗 Essential Resources & Documentation</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div>
+                            <strong style="color: #1565c0;">LLM APIs:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem; margin-top: 5px;">
+                                <li><a href="https://platform.openai.com/docs" target="_blank" style="color: #1565c0;">OpenAI API Docs</a></li>
+                                <li><a href="https://docs.anthropic.com/" target="_blank" style="color: #1565c0;">Anthropic Claude API</a></li>
+                                <li><a href="https://ai.google.dev/gemini-api/docs" target="_blank" style="color: #1565c0;">Google Gemini API</a></li>
+                                <li><a href="https://console.groq.com/docs" target="_blank" style="color: #1565c0;">Groq API Documentation</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <strong style="color: #1565c0;">Vector Databases:</strong>
+                            <ul style="color: #424242; margin-left: 15px; font-size: 0.9rem; margin-top: 5px;">
+                                <li><a href="https://docs.pinecone.io/" target="_blank" style="color: #1565c0;">Pinecone Documentation</a></li>
+                                <li><a href="https://weaviate.io/developers/weaviate" target="_blank" style="color: #1565c0;">Weaviate Developer Guide</a></li>
+                                <li><a href="https://qdrant.tech/documentation/" target="_blank" style="color: #1565c0;">Qdrant Documentation</a></li>
+                                <li><a href="https://docs.trychroma.com/" target="_blank" style="color: #1565c0;">ChromaDB Docs</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pricing data with explicit structure
+        window.pricingData = {
+            llm: {
+                openai: {
+                    gpt4o: { input: 2.50, output: 10.00, name: "GPT-4o" },
+                    gpt4omini: { input: 0.15, output: 0.60, name: "GPT-4o Mini" },
+                    gpt35turbo: { input: 0.50, output: 1.50, name: "GPT-3.5 Turbo" }
+                },
+                anthropic: {
+                    claude4sonnet: { input: 3.00, output: 15.00, name: "Claude Sonnet 4" },
+                    claude35sonnet: { input: 3.00, output: 15.00, name: "Claude 3.5 Sonnet" },
+                    claude3haiku: { input: 0.25, output: 1.25, name: "Claude 3 Haiku" },
+                    claude4opus: { input: 15.00, output: 75.00, name: "Claude Opus 4" }
+                },
+                google: {
+                    gemini25pro: { input: 1.25, output: 10.00, name: "Gemini 2.5 Pro" },
+                    gemini25flash: { input: 0.30, output: 2.50, name: "Gemini 2.5 Flash" },
+                    gemini25flashlite: { input: 0.10, output: 0.40, name: "Gemini 2.5 Flash-Lite" },
+                    gemini20flash: { input: 0.10, output: 0.40, name: "Gemini 2.0 Flash" },
+                    gemini15pro: { input: 1.25, output: 5.00, name: "Gemini 1.5 Pro" },
+                    gemini15flash: { input: 0.075, output: 0.30, name: "Gemini 1.5 Flash" }
+                },
+                groq: {
+                    llama3170b: { input: 0.59, output: 0.79, name: "Llama 3.1 70B" },
+                    mixtral8x7b: { input: 0.24, output: 0.24, name: "Mixtral 8x7B" },
+                    llama318b: { input: 0.05, output: 0.08, name: "Llama 3.1 8B" }
+                },
+                together: {
+                    llama3170b: { input: 0.88, output: 0.88, name: "Llama 3.1 70B" },
+                    qwen2572b: { input: 0.88, output: 0.88, name: "Qwen 2.5 72B" }
+                },
+                deepseek: {
+                    deepseekv25: { input: 0.14, output: 0.28, name: "DeepSeek V2.5" },
+                    deepseekcoder: { input: 0.14, output: 0.28, name: "DeepSeek Coder" }
+                }
+            },
+            embeddings: {
+                openai3small: { rate: 0.02, name: "Small", provider: "OpenAI" },
+                openai3large: { rate: 0.13, name: "Large", provider: "OpenAI" },
+                openaiada002: { rate: 0.10, name: "Ada 002", provider: "OpenAI" },
+                googleembedding: { rate: 0.15, name: "Gemini Embedding", provider: "Google" },
+                voyagelarge: { rate: 0.12, name: "Large", provider: "Voyage AI" },
+                coherev3: { rate: 0.10, name: "Embed v3", provider: "Cohere" },
+                sentencetransformers: { rate: 0.00, name: "Self-Hosted", provider: "Open Source" }
+            },
+            vectordb: {
+                pinecone: { cost: 50, name: "Pinecone" },
+                weaviate: { cost: 0, name: "Weaviate" },
+                qdrant: { cost: 0, name: "Qdrant" },
+                chroma: { cost: 0, name: "ChromaDB" },
+                milvus: { cost: 0, name: "Milvus" },
+                supabase: { cost: 0, name: "Supabase Vector" }
+            },
+            infrastructure: {
+                serverless: { cost: 15, name: "Serverless" },
+                cloud: { cost: 35, name: "Cloud" },
+                selfhosted: { cost: 10, name: "Self-Hosted" }
+            }
+        };
+
+        // Calculator functions
+        function switchTab(tabName) {
+            document.getElementById("basic-tab").style.display = "none";
+            document.getElementById("advanced-tab").style.display = "none";
+            document.getElementById("basic-btn").classList.remove("active");
+            document.getElementById("advanced-btn").classList.remove("active");
+            
+            document.getElementById(tabName + "-tab").style.display = "block";
+            document.getElementById(tabName + "-btn").classList.add("active");
+        }
+
+        function updateModels() {
+            var provider = document.getElementById("llmProvider").value;
+            var modelSelect = document.getElementById("llmModel");
+            
+            console.log("Updating models for provider:", provider);
+            
+            if (!window.pricingData.llm[provider]) {
+                console.error("Provider not found:", provider);
+                return;
+            }
+            
+            var models = window.pricingData.llm[provider];
+            console.log("Available models:", Object.keys(models));
+            
+            modelSelect.innerHTML = "";
+            var firstModel = null;
+            
+            for (var key in models) {
+                var option = document.createElement("option");
+                option.value = key;
+                option.text = models[key].name;
+                modelSelect.appendChild(option);
+                if (!firstModel) firstModel = key;
+            }
+            
+            if (firstModel) {
+                modelSelect.value = firstModel;
+                console.log("Set first model:", firstModel);
+            }
+            
+            setTimeout(calculateCosts, 50);
+        }
+
+        function updateDisplayNames() {
+            var provider = document.getElementById("llmProvider").value;
+            var model = document.getElementById("llmModel").value;
+            var vectordb = document.getElementById("vectorDB").value;
+            var embedding = document.getElementById("embeddingProvider").value;
+            var deployment = document.getElementById("deploymentOption").value;
+            var documents = parseInt(document.getElementById("documentsCount").value) || 0;
+
+            if (window.pricingData.llm[provider] && window.pricingData.llm[provider][model]) {
+                document.getElementById("llmProviderName").textContent = provider.charAt(0).toUpperCase() + provider.slice(1);
+                document.getElementById("llmModelName").textContent = window.pricingData.llm[provider][model].name;
+            }
+
+            if (window.pricingData.vectordb[vectordb]) {
+                document.getElementById("vectorDBName").textContent = window.pricingData.vectordb[vectordb].name;
+            }
+
+            if (window.pricingData.embeddings[embedding]) {
+                document.getElementById("embeddingProviderName").textContent = window.pricingData.embeddings[embedding].provider;
+                document.getElementById("embeddingModelName").textContent = window.pricingData.embeddings[embedding].name;
+            }
+
+            if (window.pricingData.infrastructure[deployment]) {
+                document.getElementById("deploymentTypeDisplay").textContent = window.pricingData.infrastructure[deployment].name;
+            }
+
+            document.getElementById("vectorStorageDisplay").textContent = (documents / 1000).toFixed(0) + "K docs";
+        }
+
+        function calculateCosts() {
+            var queries = parseInt(document.getElementById("monthlyQueries").value) || 0;
+            var provider = document.getElementById("llmProvider").value;
+            var model = document.getElementById("llmModel").value;
+            var vectordb = document.getElementById("vectorDB").value;
+            var embedding = document.getElementById("embeddingProvider").value;
+            var inputTokens = parseInt(document.getElementById("avgInputTokens").value) || 1500;
+            var outputTokens = parseInt(document.getElementById("avgOutputTokens").value) || 500;
+            var deployment = document.getElementById("deploymentOption").value;
+
+            console.log("Calculating costs for:", provider, model);
+
+            if (!provider || !model || !vectordb || !embedding || !deployment) {
+                console.log("Missing required fields");
+                return;
+            }
+
+            if (!window.pricingData.llm[provider]) {
+                console.error("Provider not found:", provider);
+                return;
+            }
+            
+            if (!window.pricingData.llm[provider][model]) {
+                console.error("Model not found:", model, "for provider:", provider);
+                return;
+            }
+
+            if (!window.pricingData.embeddings[embedding]) {
+                console.error("Embedding not found:", embedding);
+                return;
+            }
+            
+            if (!window.pricingData.vectordb[vectordb]) {
+                console.error("Vector DB not found:", vectordb);
+                return;
+            }
+            
+            if (!window.pricingData.infrastructure[deployment]) {
+                console.error("Infrastructure not found:", deployment);
+                return;
+            }
+
+            // Calculate LLM costs
+            var llmPrice = window.pricingData.llm[provider][model];
+            var inputCost = (queries * inputTokens / 1000000) * llmPrice.input;
+            var outputCost = (queries * outputTokens / 1000000) * llmPrice.output;
+            var llmTotal = inputCost + outputCost;
+
+            // Calculate embedding costs
+            var embeddingRate = window.pricingData.embeddings[embedding].rate;
+            var embeddingTotal = (queries * 1000 / 1000000) * embeddingRate;
+
+            // Get fixed costs
+            var vectordbTotal = window.pricingData.vectordb[vectordb].cost;
+            var infraTotal = window.pricingData.infrastructure[deployment].cost;
+            
+            var total = llmTotal + embeddingTotal + vectordbTotal + infraTotal;
+
+            // Update all cost displays
+            document.getElementById("llmCost").textContent = "$" + llmTotal.toFixed(2);
+            document.getElementById("embeddingCost").textContent = "$" + embeddingTotal.toFixed(2);
+            document.getElementById("vectorDBCost").textContent = "$" + vectordbTotal.toFixed(2);
+            document.getElementById("infrastructureCost").textContent = "$" + infraTotal.toFixed(2);
+            document.getElementById("totalCost").textContent = "$" + total.toFixed(2);
+            document.getElementById("finalPrice").textContent = "$" + total.toFixed(2) + "/month";
+
+            // Update individual provider cards
+            document.getElementById("llmCostDisplay").textContent = "$" + llmTotal.toFixed(2);
+            document.getElementById("embeddingCostDisplay").textContent = "$" + embeddingTotal.toFixed(2);
+            document.getElementById("vectorDBCostDisplay").textContent = "$" + vectordbTotal.toFixed(2);
+            document.getElementById("infrastructureCostDisplay").textContent = "$" + infraTotal.toFixed(2);
+
+            updateDisplayNames();
+            
+            console.log("Costs calculated successfully. Total:", total.toFixed(2));
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("DOM loaded. Pricing data:", window.pricingData);
+            console.log("Google models available:", window.pricingData.llm.google);
+            
+            // Tab switching
+            document.getElementById("basic-btn").addEventListener("click", function() {
+                switchTab("basic");
+            });
+            
+            document.getElementById("advanced-btn").addEventListener("click", function() {
+                switchTab("advanced");
+            });
+
+            // Provider change updates models
+            document.getElementById("llmProvider").addEventListener("change", updateModels);
+
+            // All input changes trigger cost calculation
+            var inputs = ["monthlyQueries", "llmModel", "vectorDB", "embeddingProvider", 
+                         "documentsCount", "avgInputTokens", "avgOutputTokens", "deploymentOption"];
+            
+            for (var i = 0; i < inputs.length; i++) {
+                var element = document.getElementById(inputs[i]);
+                if (element) {
+                    element.addEventListener("change", calculateCosts);
+                    element.addEventListener("input", calculateCosts);
+                }
+            }
+
+            // Initialize
+            updateModels();
+            calculateCosts();
+        });
+    </script>
+</body>
+</html>
